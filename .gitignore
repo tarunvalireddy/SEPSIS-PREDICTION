@@ -1,0 +1,9 @@
+# Ignore data files
+data/raw/
+data/processed/
+
+# Ignore large artifacts
+*.csv
+*.psv
+*.zip
+
