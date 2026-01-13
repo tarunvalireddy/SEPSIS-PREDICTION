@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 DATA_PATH = "data/processed/sepsis_final.csv"
 TARGET = "EarlySepsisLabel"
 OUTPUT_DIR = "logs/plots"
-
+TOP_N_FEATURES = 7   # 🔥 change to 5–9 if needed
 MAX_SHAP_SAMPLES = 2000   # 🔥 IMPORTANT (speed + stability)
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -72,9 +72,14 @@ def shap_bar_plot():
     mean_abs_shap = np.abs(shap_values).mean(axis=0)
 
     shap_df = pd.DataFrame({
-        "Feature": X_shap.columns,
-        "Mean |SHAP|": mean_abs_shap
-    }).sort_values(by="Mean |SHAP|", ascending=True)
+       "Feature": X_shap.columns,
+       "Mean |SHAP|": mean_abs_shap
+    }).sort_values(by="Mean |SHAP|", ascending=False)
+
+# 🔥 Keep only top N features
+    shap_df = shap_df.head(TOP_N_FEATURES).sort_values(by="Mean |SHAP|", ascending=True)
+
+
 
     plt.figure(figsize=(8, 6))
     plt.barh(shap_df["Feature"], shap_df["Mean |SHAP|"])
